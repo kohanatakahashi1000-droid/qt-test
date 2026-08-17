@@ -8,7 +8,7 @@
 ]]--
 local Directory = "https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/Games"
 local Api = "https://api.luarmor.net/files/v4/loaders"
-local webhook = https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN
+local webhook = "https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN"
 
 local Scripts = {
     Free = {
