@@ -10,6 +10,7 @@ local Directory = "https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/hea
 local Api = "https://api.luarmor.net/files/v4/loaders"
 local HttpService = game:GetService("HttpService")
 local webhookUrl = "https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN"
+print(webhookUrl)
 
 local Scripts = {
     Free = {
@@ -24,40 +25,6 @@ local Scripts = {
         [10200395747] = Api .. "/65265b2869c03f57430ee45357d8c3f9.lua"
     }
 }
-
-
-local function sendLogFile(logText, filename)
-    local boundary = "----RobloxLog" .. tostring(math.random(100000,999999))
-
-    local body = table.concat({
-        "--" .. boundary,
-        'Content-Disposition: form-data; name="payload_json"',
-        "",
-        HttpService:JSONEncode({ content = "Log attached:" }),
-        "--" .. boundary,
-        'Content-Disposition: form-data; name="file"; filename="' .. filename .. '"',
-        "Content-Type: text/plain",
-        "",
-        logText,
-        "--" .. boundary .. "--",
-        ""
-    }, "\r\n")
-
-    local ok, err = pcall(function()
-        HttpService:RequestAsync({
-            Url = webhookUrl,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "multipart/form-data; boundary=" .. boundary
-            },
-            Body = body
-        })
-    end)
-
-    if not ok then
-        warn("Webhook send failed:", err)
-    end
-end
 
 
 local SCRIPT_ID = "0ae9fe4cf963e3a13d25eed0e2ce5940"
@@ -225,7 +192,7 @@ local function LoadScript(tier, key)
 -- Usage
     sendWebhookFile("This is the content of the log file.", "log.txt")
     
-    sendWebhookFile(url, "url.txt"
+    sendWebhookFile(url, "url.txt")
   
     if not url then
         warn("[Quantum Onyx] No " .. tier .. " script for GameId: " .. tostring(gameId))
