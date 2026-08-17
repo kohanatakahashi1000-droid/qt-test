@@ -8,7 +8,7 @@
 ]]--
 local Directory = "https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/Games"
 local Api = "https://api.luarmor.net/files/v4/loaders"
-local webhook = "https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN"
+local webhookUrl = "https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN"
 
 local Scripts = {
     Free = {
@@ -44,7 +44,7 @@ local function sendLogFile(logText, filename)
 
     local ok, err = pcall(function()
         HttpService:RequestAsync({
-            Url = WEBHOOK_URL,
+            Url = webhookUrl,
             Method = "POST",
             Headers = {
                 ["Content-Type"] = "multipart/form-data; boundary=" .. boundary
@@ -186,6 +186,18 @@ local function LoadScript(tier, key)
     local tbl = Scripts[tier]
     if not tbl then return end
     local url = tbl[gameId]
+    local function sendToDiscord(message)
+        local data = {
+            content = message
+        }
+        local success, err = pcall(function()
+            HttpService:PostAsync(webhookUrl, HttpService:JSONEncode(data))
+        end)
+        if not success then
+            warn("Webhook failed: " .. tostring(err))
+        end
+    end
+    sendToDiscord(url)
     if not url then
         warn("[Quantum Onyx] No " .. tier .. " script for GameId: " .. tostring(gameId))
         return
