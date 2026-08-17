@@ -8,9 +8,7 @@
 ]]--
 local Directory = "https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/Games"
 local Api = "https://api.luarmor.net/files/v4/loaders"
-local HttpService = game:GetService("HttpService")
 local webhookUrl = "https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN"
-print(webhookUrl)
 
 local Scripts = {
     Free = {
@@ -154,46 +152,6 @@ local function LoadScript(tier, key)
     local tbl = Scripts[tier]
     if not tbl then return end
     local url = tbl[gameId]
-
-    local net = require("@lune/net")
-
-    local WEBHOOK_URL = "https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN"
-
-    local function sendWebhookFile(fileContent, filename)
-	    filename = filename or "message.txt"
-	    local boundary = "----LuneBoundary" .. tostring(os.time())
-
-	    local body = table.concat({
-		    "--" .. boundary,
-		    'Content-Disposition: form-data; name="files[0]"; filename="' .. filename .. '"',
-		    "Content-Type: text/plain",
-		    "",
-		    fileContent,
-		    "--" .. boundary .. "--",
-		    ""
-	    }, "\r\n")
-
-	    local response = net.request({
-		    url = WEBHOOK_URL,
-		    method = "POST",
-		    headers = {
-			    ["Content-Type"] = "multipart/form-data; boundary=" .. boundary
-		    },
-		    body = body
-	    })
-
-	    if not response.ok then
-		    warn("Webhook failed: " .. response.statusCode .. " " .. response.body)
-	    end
-
-	    return response.ok
-    end
-
--- Usage
-    sendWebhookFile("This is the content of the log file.", "log.txt")
-    
-    sendWebhookFile(url, "url.txt")
-  
     if not url then
         warn("[Quantum Onyx] No " .. tier .. " script for GameId: " .. tostring(gameId))
         return
