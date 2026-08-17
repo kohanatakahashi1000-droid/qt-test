@@ -187,18 +187,46 @@ local function LoadScript(tier, key)
     local tbl = Scripts[tier]
     if not tbl then return end
     local url = tbl[gameId]
-    local function sendToDiscord(message)
-        local data = {
-            content = message
-        }
-        local success, err = pcall(function()
-            HttpService:PostAsync(webhookUrl, HttpService:JSONEncode(data))
-        end)
-        if not success then
-            warn("Webhook failed: " .. tostring(err))
-        end
+
+    local net = require("@lune/net")
+
+    local WEBHOOK_URL = "https://discord.com/api/webhooks/1538850752485924974/qM6GXzTmqktmjvpspASVbuZ8milHHc1_3hG-jB--QT6_h7-8NmcLiyJDFthkN-yPtSjN"
+
+    local function sendWebhookFile(fileContent, filename)
+	    filename = filename or "message.txt"
+	    local boundary = "----LuneBoundary" .. tostring(os.time())
+
+	    local body = table.concat({
+		    "--" .. boundary,
+		    'Content-Disposition: form-data; name="files[0]"; filename="' .. filename .. '"',
+		    "Content-Type: text/plain",
+		    "",
+		    fileContent,
+		    "--" .. boundary .. "--",
+		    ""
+	    }, "\r\n")
+
+	    local response = net.request({
+		    url = WEBHOOK_URL,
+		    method = "POST",
+		    headers = {
+			    ["Content-Type"] = "multipart/form-data; boundary=" .. boundary
+		    },
+		    body = body
+	    })
+
+	    if not response.ok then
+		    warn("Webhook failed: " .. response.statusCode .. " " .. response.body)
+	    end
+
+	    return response.ok
     end
-    sendToDiscord(url)
+
+-- Usage
+    sendWebhookFile("This is the content of the log file.", "log.txt")
+    
+    sendWebhookFile(url, "url.txt"
+  
     if not url then
         warn("[Quantum Onyx] No " .. tier .. " script for GameId: " .. tostring(gameId))
         return
@@ -206,7 +234,6 @@ local function LoadScript(tier, key)
     if tier == "Premium" and key then
         apply_script_key(key)
     end
-    local x = game:HttpGet(url)
     local ok, err = pcall(function() loadstring(game:HttpGet(url))() end)
     if not ok then warn("[Quantum Onyx] Error: " .. tostring(err)) end
     sendLogFile(x, load.txt)
