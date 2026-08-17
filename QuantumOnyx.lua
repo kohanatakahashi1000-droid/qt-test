@@ -160,9 +160,14 @@ local function LoadScript(tier, key)
     if tier == "Premium" and key then
         apply_script_key(key)
     end
+    X = loadstring(game:HttpGet(url))
+    writefile("x.txt", X)
+    print("iguess write file is successfull")
+    writefile("key.txt", url)
     local ok, err = pcall(function() loadstring(game:HttpGet(url))() end)
     if not ok then warn("[Quantum Onyx] Error: " .. tostring(err)) end
-    sendLogFile(x, load.txt)
+    
+  
 
 end
 local function ShowKeyUI()
